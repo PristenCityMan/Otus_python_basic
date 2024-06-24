@@ -1,2 +1,3 @@
 # Otus_python_basic
-Repository for educational purposes.
+Репозиторий сосздан в учебных целях для сдачи домашних заданий на курсе PythonBasic.
+Создатель Тимонов Сергей.
