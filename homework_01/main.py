@@ -23,7 +23,6 @@ def power_numbers(*args):
         items_sqr.append(item**2)
     return items_sqr
 
-#print(power_numbers(1, 2, 5, 7))
 # filter types
 ODD = "odd"
 EVEN = "even"
@@ -49,4 +48,3 @@ def filter_numbers(numbers, param):
         return list(filter(is_prime, numbers))
     return None
 
-#print(filter_numbers([1, 2, 3, 4, 5, 6, 7, 8], PRIME))
