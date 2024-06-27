@@ -2,6 +2,10 @@
 Домашнее задание №1
 Функции и структуры данных
 """
+# filter types
+ODD = "odd"
+EVEN = "even"
+PRIME = "prime"
 
 def is_prime (number):
     if number < 2:
@@ -22,12 +26,6 @@ def power_numbers(*args):
     for item in args:
         items_sqr.append(item**2)
     return items_sqr
-
-# filter types
-ODD = "odd"
-EVEN = "even"
-PRIME = "prime"
-
 
 def filter_numbers(numbers, param):
     """
