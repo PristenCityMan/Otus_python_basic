@@ -2,8 +2,8 @@
 создайте класс `Plane`, наследник `Vehicle`
 """
 
-from Otus_python_basic.homework_02.base import Vehicle
-from Otus_python_basic.homework_02.exceptions import CargoOverload
+from .base import Vehicle
+from .exceptions import CargoOverload
 
 
 class Plane(Vehicle):

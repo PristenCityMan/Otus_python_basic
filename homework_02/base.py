@@ -1,5 +1,5 @@
 from abc import ABC
-from Otus_python_basic.homework_02.exceptions import *
+from .exceptions import *
 
 
 class Vehicle(ABC):
@@ -16,13 +16,10 @@ class Vehicle(ABC):
     def set_fuel(self, fuel):
         self.fuel = fuel
 
-    def set_started(self, started):
-        self.started = started
-
     def start(self):
-        if self.started:
+        if not self.started:
             if self.fuel > 0:
-                self.set_started(self, True)
+                self.started = True
             else:
                 raise LowFuelError
 
@@ -30,4 +27,4 @@ class Vehicle(ABC):
         if distance * self.fuel_consumption > self.fuel:
             raise NotEnoughFuel
         else:
-            self.set_fuel(self, self.fuel - distance * self.fuel_consumption)
+            self.fuel = self.fuel - distance * self.fuel_consumption

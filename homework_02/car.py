@@ -2,8 +2,8 @@
 создайте класс `Car`, наследник `Vehicle`
 """
 
-from Otus_python_basic.homework_02.base import Vehicle
-from Otus_python_basic.homework_02.engine import Engine
+from .base import Vehicle
+from .engine import Engine
 
 
 class Car(Vehicle):
