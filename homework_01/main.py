@@ -2,18 +2,21 @@
 Домашнее задание №1
 Функции и структуры данных
 """
+
 # filter types
 ODD = "odd"
 EVEN = "even"
 PRIME = "prime"
 
-def is_prime (number):
+
+def is_prime(number):
     if number < 2:
         return False
-    for i in range (2,number // 2 + 1):
+    for i in range(2, number // 2 + 1):
         if number % i == 0:
             return False
     return True
+
 
 def power_numbers(*args):
     """
@@ -26,6 +29,7 @@ def power_numbers(*args):
     for item in args:
         items_sqr.append(item**2)
     return items_sqr
+
 
 def filter_numbers(numbers, param):
     """
@@ -45,4 +49,3 @@ def filter_numbers(numbers, param):
     elif param == PRIME:
         return list(filter(is_prime, numbers))
     return None
-
