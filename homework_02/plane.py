@@ -10,7 +10,10 @@ class Plane(Vehicle):
     max_cargo = 0
     cargo = 0
 
-    def __init__(self, max_cargo):
+    def __init__(self, weight, fuel, fuel_consumption, max_cargo):
+        self.weight = weight
+        self.fuel = fuel
+        self.fuel_consumption = fuel_consumption
         self.max_cargo = max_cargo
 
     def load_cargo(self, load_cargo):
