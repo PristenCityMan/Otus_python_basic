@@ -1,3 +1,4 @@
+#START docker: docker run -p 8000:8000 -it app
 FROM python:3.11-bookworm
 
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -13,7 +14,7 @@ COPY pyproject.toml poetry.lock ./
 
 RUN poetry install
 
-COPY .. ./
+COPY  main.py ./
 
 CMD uvicorn main:app --host 0.0.0.0 --port 8000
 
