@@ -9,8 +9,61 @@
 """
 
 import os
+from sqlalchemy.ext.asyncio import (
+    create_async_engine,
+    async_sessionmaker,
+)
+from sqlalchemy import Integer, String, MetaData, ForeignKey
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    declared_attr,
+    Mapped,
+    mapped_column,
+    relationship,
+)
+import config
 
-PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost/postgres"
+from sqlalchemy import create_engine
 
-Base = None
-Session = None
+
+PG_CONN_URI = (
+    os.environ.get("SQLALCHEMY_PG_CONN_URI")
+    or "postgresql+asyncpg://postgres:password@localhost/postgres"
+)
+SQLALCHEMY_ECHO = True
+
+
+engine = create_async_engine(url=PG_CONN_URI, echo=SQLALCHEMY_ECHO)
+
+Session = async_sessionmaker(
+    bind=engine,
+    expire_on_commit=False,
+)
+
+
+class Base(DeclarativeBase):
+    @declared_attr.directive
+    def __tablename__(cls) -> str:
+        return f"{(cls.__name__).lower()}s"
+
+    metadata = MetaData(
+        naming_convention=config.SQLALCHEMY_NAMING_CONVENTION,
+    )
+
+
+class User(Base):
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[String] = mapped_column(String)
+    username: Mapped[String] = mapped_column(String)
+    email: Mapped[String] = mapped_column(String)
+
+    post: Mapped[list["Post"]] = relationship("Post", back_populates="users")
+
+
+class Post(Base):
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[String] = mapped_column(String)
+    body: Mapped[String] = mapped_column(String)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
+
+    user: Mapped["User"] = relationship("User", back_populates="posts")
