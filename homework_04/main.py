@@ -15,6 +15,8 @@
 
 from models import engine, Base, Session
 import asyncio
+from jsonplaceholder_requests import fetch_posts, fetch_users
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 async def create_tables():
@@ -26,6 +28,21 @@ async def create_tables():
 async def async_main():
     async with Session() as session:
         ct = await create_tables()
+
+
+async def create_owner(
+    session: AsyncSession,
+    name: str,
+    username: str,
+) -> Owner:
+    owner = Owner(
+        name=name,
+        username=username,
+    )
+    session.add(owner)
+    await session.commit()
+    # await session.refresh(owner)
+    return owner
 
 
 def main():
