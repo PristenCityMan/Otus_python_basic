@@ -15,7 +15,14 @@
 
 from models import engine, Base, Session
 import asyncio
-from jsonplaceholder_requests import fetch_posts, fetch_users
+from jsonplaceholder_requests import (
+    filter_data,
+    USERS_DATA_URL,
+    POSTS_DATA_URL,
+    KEYS_USERS,
+    KEYS_POSTS,
+)
+from models import User, Post
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -25,24 +32,33 @@ async def create_tables():
         await conn.run_sync(Base.metadata.create_all)
 
 
-async def async_main():
-    async with Session() as session:
-        ct = await create_tables()
-
-
-async def create_owner(
-    session: AsyncSession,
-    name: str,
-    username: str,
-) -> Owner:
-    owner = Owner(
-        name=name,
-        username=username,
-    )
-    session.add(owner)
+async def create_user(
+    session: AsyncSession, id: int, name: str, username: str, email: str
+) -> User:
+    user = User(id=id, name=name, username=username, email=email)
+    session.add(user)
     await session.commit()
-    # await session.refresh(owner)
-    return owner
+    return user
+
+
+async def create_post(
+    session: AsyncSession, id: int, title: str, body: str, user_id: int
+) -> Post:
+    post = Post(id=id, title=title, body=body, user_id=user_id)
+    session.add(post)
+    await session.commit()
+    return post
+
+
+async def async_main():
+    async with AsyncSession() as session:
+        await create_tables()
+        users_data: list[dict]
+        posts_data: list[dict]
+        users_data, posts_data = await asyncio.gather(
+            filter_data(KEYS_USERS, USERS_DATA_URL),
+            filter_data(KEYS_POSTS, POSTS_DATA_URL),
+        )
 
 
 def main():
@@ -50,4 +66,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(async_main())

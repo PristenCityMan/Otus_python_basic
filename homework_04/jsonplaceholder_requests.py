@@ -8,6 +8,8 @@ import aiohttp
 
 USERS_DATA_URL = "https://jsonplaceholder.typicode.com/users"
 POSTS_DATA_URL = "https://jsonplaceholder.typicode.com/posts"
+KEYS_USERS = ("id", "name", "username", "email")
+KEYS_POSTS = ("id", "userId", "title", "body")
 
 
 async def fetch_json(url: str) -> dict:
@@ -16,27 +18,28 @@ async def fetch_json(url: str) -> dict:
             return await response.json()
 
 
-async def fetch_users() -> dict:
+async def filter_data(KEYS: tuple, URL: str) -> dict:
     try:
-        data: dict = await fetch_json(USERS_DATA_URL)
+        data: dict = await fetch_json(URL)
     except aiohttp.ClientError as ex:
         print("can't fetch users")
         return None
-    return {
-        key: field
-        for key, field in data.items()
-        if key in ("id", "name", "username", "email")
-    }
+    data_filtred: list = []
+    for element in data:
+        user_filtred: dict = {
+            key: field for key, field in element.items() if key in KEYS
+        }
+        data_filtred.append(user_filtred)
+    print(data_filtred)
+    return data_filtred
 
 
-async def fetch_posts() -> dict:
-    try:
-        data: dict = await fetch_json(POSTS_DATA_URL)
-    except aiohttp.ClientError as ex:
-        print("can't fetch posts")
-        return None
-    return {
-        key: field
-        for key, field in data.items()
-        if key in ("id", "userId", "title", "body")
-    }
+async def main():
+    await asyncio.gather(
+        filter_data(KEYS_USERS, USERS_DATA_URL),
+        filter_data(KEYS_POSTS, POSTS_DATA_URL),
+    )
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
