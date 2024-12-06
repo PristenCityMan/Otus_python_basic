@@ -13,7 +13,7 @@
 - закрытие соединения с БД
 """
 
-from models import engine, Base, Session
+from models import engine, Base, async_session
 import asyncio
 from jsonplaceholder_requests import (
     filter_data,
@@ -50,15 +50,41 @@ async def create_post(
     return post
 
 
-async def async_main():
-    async with AsyncSession() as session:
-        await create_tables()
-        users_data: list[dict]
-        posts_data: list[dict]
-        users_data, posts_data = await asyncio.gather(
-            filter_data(KEYS_USERS, USERS_DATA_URL),
-            filter_data(KEYS_POSTS, POSTS_DATA_URL),
+async def create_users(session: AsyncSession, user_data: list[dict]) -> None:
+    for user in user_data:
+        await create_user(
+            session,
+            user.get("id"),
+            user.get("name"),
+            user.get("username"),
+            user.get("email"),
         )
+
+
+async def create_posts(session: AsyncSession, post_data: list[dict]) -> None:
+    for post in post_data:
+        await create_post(
+            session,
+            post.get("id"),
+            post.get("title"),
+            post.get("body"),
+            post.get("userId"),
+        )
+
+
+async def async_main():
+    await create_tables()
+
+    users_data: list[dict]
+    posts_data: list[dict]
+    users_data, posts_data = await asyncio.gather(
+        filter_data(KEYS_USERS, USERS_DATA_URL),
+        filter_data(KEYS_POSTS, POSTS_DATA_URL),
+    )
+
+    async with async_session() as session:
+        await create_users(session, users_data),
+        await create_posts(session, posts_data),
 
 
 def main():

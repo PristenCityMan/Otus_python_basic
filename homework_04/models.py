@@ -33,9 +33,13 @@ PG_CONN_URI = (
 SQLALCHEMY_ECHO = True
 
 
-engine = create_async_engine(url=PG_CONN_URI, echo=SQLALCHEMY_ECHO)
-
-Session = async_sessionmaker(
+engine = create_async_engine(
+    url=PG_CONN_URI,
+    echo=SQLALCHEMY_ECHO,
+    pool_size=50,
+    max_overflow=10,
+)
+async_session = async_sessionmaker(
     bind=engine,
     expire_on_commit=False,
 )
@@ -57,7 +61,7 @@ class User(Base):
     username: Mapped[String] = mapped_column(String)
     email: Mapped[String] = mapped_column(String)
 
-    post: Mapped[list["Post"]] = relationship("Post", back_populates="users")
+    posts: Mapped[list["Post"]] = relationship("Post", back_populates="users")
 
 
 class Post(Base):
@@ -66,4 +70,4 @@ class Post(Base):
     body: Mapped[String] = mapped_column(String)
 
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
-    user: Mapped["User"] = relationship("User", back_populates="posts")
+    users: Mapped["User"] = relationship("User", back_populates="posts")
