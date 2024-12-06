@@ -39,7 +39,7 @@ engine = create_async_engine(
     pool_size=50,
     max_overflow=10,
 )
-async_session = async_sessionmaker(
+Session = async_sessionmaker(
     bind=engine,
     expire_on_commit=False,
 )
@@ -61,7 +61,7 @@ class User(Base):
     username: Mapped[String] = mapped_column(String)
     email: Mapped[String] = mapped_column(String)
 
-    posts: Mapped[list["Post"]] = relationship("Post", back_populates="users")
+    posts: Mapped[list["Post"]] = relationship("Post", back_populates="user")
 
 
 class Post(Base):
@@ -70,4 +70,4 @@ class Post(Base):
     body: Mapped[String] = mapped_column(String)
 
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
-    users: Mapped["User"] = relationship("User", back_populates="posts")
+    user: Mapped["User"] = relationship("User", back_populates="posts")

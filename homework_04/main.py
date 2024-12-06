@@ -13,7 +13,7 @@
 - закрытие соединения с БД
 """
 
-from models import engine, Base, async_session
+from models import engine, Base, Session
 import asyncio
 from jsonplaceholder_requests import (
     filter_data,
@@ -82,7 +82,7 @@ async def async_main():
         filter_data(KEYS_POSTS, POSTS_DATA_URL),
     )
 
-    async with async_session() as session:
+    async with Session() as session:
         await create_users(session, users_data),
         await create_posts(session, posts_data),
 
