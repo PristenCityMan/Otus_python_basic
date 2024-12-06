@@ -64,6 +64,6 @@ class Post(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[String] = mapped_column(String)
     body: Mapped[String] = mapped_column(String)
-    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
 
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
     user: Mapped["User"] = relationship("User", back_populates="posts")
