@@ -28,7 +28,7 @@ from sqlalchemy import create_engine
 
 PG_CONN_URI = (
     os.environ.get("SQLALCHEMY_PG_CONN_URI")
-    or "postgresql+asyncpg://postgres:Ascdfg56@localhost/postgres"
+    or "postgresql+asyncpg://postgres:password@localhost/postgres"
 )
 SQLALCHEMY_ECHO = True
 
