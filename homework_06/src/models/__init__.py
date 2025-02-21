@@ -1,11 +1,12 @@
 __all__ = (
     "Base",
-    "db",
+    # "db",
     "User",
-    "Post"
+    "Post",
 )
 
 from .base import Base
-from .flask_db import db
+
+# from .flask_db import db
 from .user import User
 from .post import Post
